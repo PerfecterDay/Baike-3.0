@@ -51,8 +51,8 @@ public class FragSearch extends Fragment implements OnClickListener,
 	private ListView mListView;
 	private List<ListItem> mSearchLists;
 
-//	private String devbaseURL = "http://mhbb.mhedu.sh.cn:8080/hdwiki/index.php";
-	private String devbaseURL = "http://192.168.1.106/hdwiki/index.php";
+	private String devbaseURL = "http://mhbb.mhedu.sh.cn:8080/hdwiki/index.php";
+//	private String devbaseURL = "http://192.168.1.106/hdwiki/index.php";
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
