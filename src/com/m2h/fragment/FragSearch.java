@@ -152,10 +152,10 @@ public class FragSearch extends Fragment implements OnClickListener,
 	}
 
 	private List<ListItem> getJsonData(String url) {
-		Log.i("newsString",url);
 		List<ListItem> newsBeanList = new ArrayList<ListItem>();
 		try {
 			String jsonString = readStream(new URL(url).openStream());
+			Log.i("newsString",jsonString);
 			JSONObject jsonobject = new JSONObject(jsonString);
 			JSONArray jsonarray = jsonobject.getJSONArray("docs");
 			for (int i = 0; i < jsonarray.length(); i++) {
