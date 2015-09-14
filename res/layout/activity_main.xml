@@ -1,0 +1,55 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:zhy="http://schemas.android.com/apk/res/com.m2h.activity"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.m2h.activity.MainActivity" >
+
+    <include layout="@layout/top_bar" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" >
+    </android.support.v4.view.ViewPager>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/bottom_bg"
+        android:orientation="horizontal" >
+
+        <com.m2h.utils.ChangeColorIconWithTextView
+            android:id="@+id/id_indicator_one"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:padding="5dp"
+            zhy:icon="@drawable/home_1"
+            zhy:text="@string/tab_home"
+            zhy:text_size="12sp" />
+
+        <com.m2h.utils.ChangeColorIconWithTextView
+            android:id="@+id/id_indicator_two"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:padding="5dp"
+            zhy:icon="@drawable/search_1"
+            zhy:text="@string/tab_search"
+            zhy:text_size="12sp" />
+
+        <com.m2h.utils.ChangeColorIconWithTextView
+            android:id="@+id/id_indicator_three"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:padding="5dp"
+            zhy:icon="@drawable/user_1"
+            zhy:text="@string/tab_user"
+            zhy:text_size="12sp" />
+    </LinearLayout>
+
+</LinearLayout>

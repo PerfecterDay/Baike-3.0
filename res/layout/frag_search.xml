@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#F8F8F8"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/top"
+        android:layout_width="fill_parent"
+        android:layout_height="55dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp" >
+
+        <Button
+            android:id="@+id/id_btn_Search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="搜索"
+            android:textSize="12sp" />
+
+        <RelativeLayout
+            android:id="@+id/id_SearchDelete"
+            android:layout_width="fill_parent"
+            android:layout_height="45dp"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/id_btn_Search"
+            android:background="@drawable/ic_preference_single_normal"
+            android:gravity="center_vertical" >
+
+            <EditText
+                android:id="@+id/id_etSearch"
+                android:layout_width="fill_parent"
+                android:layout_height="30dp"
+                android:layout_centerInParent="true"
+                android:layout_marginRight="10dp"
+                android:hint="请输入文字..."
+                android:paddingLeft="10dp"
+                android:singleLine="true"
+                android:textSize="12sp" />
+
+            <ImageView
+                android:id="@+id/id_ivDeleteText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:paddingRight="5dp"
+                android:src="@drawable/ic_clear_search_api_holo_light"
+                android:visibility="gone" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/id_search_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:layout_marginTop="2dp"
+        android:choiceMode="singleChoice"
+        android:divider="#B8B8B8"
+        android:dividerHeight="1dp"
+        android:listSelector="@android:color/transparent"
+        android:scrollbars="none" />
+
+</LinearLayout>
