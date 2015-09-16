@@ -1,11 +1,28 @@
 package com.m2h.activity;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLDecoder;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -144,26 +161,6 @@ public class ShowActivity extends Activity {
 
 	}
 
-	// 下载接口监听器
-	class MyDownload implements DownloadListener {
-
-		public void onDownloadStart(String url, String userAgent,
-				String contentDisposition, String mimetype, long contentLength) {
-			System.out.println("url ------------>" + url);
-			if (url.endsWith(".pdf") || url.endsWith(".gif")
-					|| url.endsWith(".jpg") || url.endsWith(".doc")
-					|| url.endsWith(".docx") || url.endsWith(".ppt")) {
-				// new HttpThread(url).start();
-
-				// 使用默认浏览器下载
-				Uri uri = Uri.parse(url);
-				Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-				startActivity(intent);
-			}
-		}
-
-	}
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -199,5 +196,268 @@ public class ShowActivity extends Activity {
 	// e.printStackTrace();
 	// }
 	// }
+	
+	class MyDownload implements DownloadListener
+	{
+
+		public void onDownloadStart(String url, String userAgent,
+				String contentDisposition, String mimetype, long contentLength)
+		{
+
+			System.out.println("url ------------>" + url);
+
+			// 判断存储卡是否存在，并且是否具有读写权限
+			// if(Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
+			// {
+			// Toast t=Toast.makeText(ShowActivity.this, "需要SD卡。",
+			// Toast.LENGTH_LONG);
+			// t.setGravity(Gravity.CENTER, 0, 0);
+			// t.show();
+			// return;
+			// }
+			if (url.endsWith(".pdf") || url.endsWith(".gif")
+					|| url.endsWith(".jpg") || url.endsWith(".doc")
+					|| url.endsWith(".docx") || url.endsWith(".ppt"))
+			{
+				// new HttpThread(url).start();
+
+				// 使用默认浏览器下载
+				// Uri uri = Uri.parse(url);
+				// Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+				// startActivity(intent);
+
+				/* 使用异步下载下载文件 */
+				DownloaderTask task = new DownloaderTask();
+				task.execute(url);
+			}
+		}
+	}
+
+	// 下载内部类
+	@SuppressLint("DefaultLocale")
+	private class DownloaderTask extends AsyncTask<String, Void, String>
+	{
+
+		public DownloaderTask()
+		{
+
+		}
+
+		@SuppressWarnings("deprecation")
+		@Override
+		protected String doInBackground(String... params)
+		{
+
+			String url = params[0];
+
+			// Log.i("tag", "url="+url);
+			String fileName = url.substring(url.lastIndexOf("/") + 1);
+
+			// 文件名字如果是中文则解码
+			fileName = URLDecoder.decode(fileName);
+
+			Log.i("tag", "fileName=" + fileName);
+
+			// 得到目录
+			File directory = Environment.getExternalStorageDirectory();
+
+			File file = new File(directory, fileName);
+			// 若已经下载
+			if (file.exists())
+			{
+				Log.i("tag", "The file has already exists.");
+
+				return fileName;
+			}
+
+			try
+			{
+				HttpClient client = new DefaultHttpClient();
+				// 设置超时
+				// client.getParams().setIntParameter("http.socket.timeout",3000);
+				HttpGet get = new HttpGet(url);
+
+				HttpResponse response = client.execute(get);
+
+				if (HttpStatus.SC_OK == response.getStatusLine()
+						.getStatusCode())
+				{
+					HttpEntity entity = response.getEntity();
+					InputStream input = entity.getContent();
+
+					writeToSDCard(fileName, input);
+
+					input.close();
+					// entity.consumeContent();
+					return fileName;
+				}
+				else
+				{
+					return null;
+				}
+			} catch (Exception e)
+			{
+				e.printStackTrace();
+				return null;
+			}
+		}
+
+		// 把文件写到SD卡里面
+		private void writeToSDCard(String fileName, InputStream input)
+		{
+
+			
+				File directory = Environment.getExternalStorageDirectory();
+				File file = new File(directory, fileName);
+				 if(file.exists())
+				 {
+				 Log.i("tag", "The file has already exists.");
+				 return;
+				 }
+				// 写入文件
+				try
+				{
+					FileOutputStream fos = new FileOutputStream(file);
+					byte[] b = new byte[2048];
+					int j = 0;
+					while ((j = input.read(b)) != -1)
+					{
+						fos.write(b, 0, j);
+					}
+					fos.flush();
+					fos.close();
+				} catch (FileNotFoundException e)
+				{
+					e.printStackTrace();
+				} catch (IOException e)
+				{
+					e.printStackTrace();
+				}
+
+		}
+
+		@Override
+		protected void onCancelled()
+		{
+
+			// TODO Auto-generated method stub
+			super.onCancelled();
+		}
+
+		@Override
+		protected void onPostExecute(String result)
+		{
+
+			super.onPostExecute(result);
+			if (result == null)
+			{
+				Toast t = Toast.makeText(ShowActivity.this, "连接错误！请稍后再试！",
+						Toast.LENGTH_LONG);
+				t.setGravity(Gravity.CENTER, 0, 0);
+				t.show();
+				return;
+			}
+
+			Toast t = Toast.makeText(ShowActivity.this, "已保存到SD卡。",
+					Toast.LENGTH_LONG);
+			t.setGravity(Gravity.CENTER, 0, 0);
+			t.show();
+			File directory = Environment.getExternalStorageDirectory();
+			File file = new File(directory, result);
+			Log.i("tag", "Path=" + file.getAbsolutePath());
+
+			Intent intent = getFileIntent(file);
+
+			startActivity(intent);
+		}
+
+		private Intent getFileIntent(File file)
+		{
+
+			Uri uri = Uri.fromFile(file);
+
+			String type = getMIMEType(file);
+
+			Log.i("tag", "type=" + type);
+			Intent intent = new Intent("android.intent.action.VIEW");
+			intent.addCategory("android.intent.category.DEFAULT");
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			intent.setDataAndType(uri, type);
+			return intent;
+		}
+		
+
+
+		private String getMIMEType(File file)
+		{
+
+			String type = "";
+			String fName = file.getName();
+			/* 取得扩展名 */
+			String end = fName.substring(fName.lastIndexOf(".") + 1,
+					fName.length()).toLowerCase();
+
+			/* 依扩展名的类型决定MimeType */
+			if (end.equals("pdf"))
+			{
+				type = "application/pdf";//
+			}
+			else if (end.equals("m4a") || end.equals("mp3")
+					|| end.equals("mid") || end.equals("xmf")
+					|| end.equals("ogg") || end.equals("wav"))
+			{
+				type = "audio/*";
+			}
+			else if (end.equals("3gp") || end.equals("mp4"))
+			{
+				type = "video/*";
+			}
+			else if (end.equals("jpg") || end.equals("gif")
+					|| end.equals("png") || end.equals("jpeg")
+					|| end.equals("bmp"))
+			{
+				type = "image/*";
+			}
+			else if (end.equals("apk"))
+			{
+				/* android.permission.INSTALL_PACKAGES */
+				type = "application/vnd.android.package-archive";
+			}
+			else if (end.equals("pptx") || end.equals("ppt"))
+			{
+				type = "application/vnd.ms-powerpoint";
+			}
+			else if (end.equals("docx") || end.equals("doc"))
+			{
+				type = "application/vnd.ms-word";
+			}
+			else if (end.equals("xlsx") || end.equals("xls"))
+			{
+				type = "application/vnd.ms-excel";
+			}
+			else
+			{
+				/* 如果无法直接打开，就跳出软件列表给用户选择 */
+				type = "*/*";
+			}
+			return type;
+		}
+
+		@Override
+		protected void onPreExecute()
+		{
+
+			super.onPreExecute();
+
+		}
+
+		@Override
+		protected void onProgressUpdate(Void... values)
+		{
+
+			super.onProgressUpdate(values);
+		}
+	}
+
 
 }
