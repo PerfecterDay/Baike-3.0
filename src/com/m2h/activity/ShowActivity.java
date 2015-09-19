@@ -19,6 +19,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.Loader;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -47,6 +48,7 @@ public class ShowActivity extends Activity {
 	private ProgressDialog dialog;
 	private String devbaseURL = "http://mhbb.mhedu.sh.cn:8080/hdwiki/index.php";
 	private int cid;
+	String urlString;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -85,9 +87,11 @@ public class ShowActivity extends Activity {
 		ws.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
 		if (0==flag) {
 			webview.loadUrl(devbaseURL + "?app-category_view-" + cid);
+			urlString  = devbaseURL + "?app-category_view-" + cid;
 
 		} else {
 			webview.loadUrl(devbaseURL + "?app-docview-" + cid);
+			urlString  = devbaseURL + "?app-category_view-" + cid;
 		}
 		
 	}
@@ -106,13 +110,14 @@ public class ShowActivity extends Activity {
 			@Override
 			public void onReceivedError(WebView view, int errorCode,
 					String description, String failingUrl) {
-				// ??
-				view.loadUrl("");
-				Toast toast = Toast.makeText(ShowActivity.this,
-						"请连接网络... ———刷新。", Toast.LENGTH_SHORT);
-				// 可以控制toast显示的位置
-				toast.setGravity(Gravity.CENTER, 0, 0);
-				toast.show();
+				view.stopLoading();
+				String data = "无网络！请连接网络后刷新!";
+		        view.loadUrl("javascript:document.body.innerHTML=\"" + data + "\"");
+//				Toast toast = Toast.makeText(ShowActivity.this,
+//						"请连接网络... ———刷新。", Toast.LENGTH_SHORT);
+//				// 可以控制toast显示的位置
+//				toast.setGravity(Gravity.CENTER, 0, 0);
+//				toast.show();
 				super.onReceivedError(view, errorCode, description, failingUrl);
 			}
 		});
@@ -173,13 +178,9 @@ public class ShowActivity extends Activity {
 		int id = item.getItemId();
 		switch (id) {
 		
-		case R.id.action_settings:					//单击刷新，获取侧边栏及刷新Webview	
-			if (0==flag) {
-				webview.loadUrl(devbaseURL + "?app-category_view-" + cid);
+		case R.id.action_settings:					//单击刷新，获取侧边栏及刷新Webview			
+			webview.reload();
 
-			} else {
-				webview.loadUrl(devbaseURL + "?app-docview-" + cid);
-			}
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
