@@ -2,21 +2,30 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg2"
+    android:background="#ffffff"
     android:orientation="vertical" >
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="170dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/top_icon" />
 
     <GridView
         android:id="@+id/id_home_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:background="#F8F8F8"
         android:columnWidth="100dp"
         android:horizontalSpacing="10dp"
-        android:numColumns="3"
-        android:padding="15dp"
+        android:numColumns="4"
+        android:padding="20dp"
         android:scrollbars="none"
         android:stretchMode="columnWidth"
-        android:verticalSpacing="15dp" >
+        android:verticalSpacing="50dp" >
     </GridView>
 
 </LinearLayout>

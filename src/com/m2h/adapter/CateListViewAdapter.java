@@ -64,34 +64,34 @@ public class CateListViewAdapter extends BaseAdapter {
 
 		int flag = item.getFlag();
 		if (flag == 0) {
-			imageView.setImageResource(R.drawable.ic_cate);
+			imageView.setImageResource(R.drawable.p002);
 
 			if (level == TOP_LEVEL) {
-				convertView.setBackgroundColor(Color.parseColor("#F8F8F8"));
+				convertView.setBackgroundColor(Color.parseColor("#E7E3E2"));
 				if (selectposition == position) {
 					convertView.setBackgroundColor(Color.parseColor("#EFEDEE"));
 					cateTitle.setTextColor(Color.BLUE);
 				} else {
-					convertView.setBackgroundColor(Color.parseColor("#F8F8F8"));
+					convertView.setBackgroundColor(Color.parseColor("#E7E3E2"));
 					cateTitle.setTextColor(Color.BLACK);
 				}
 
 			} else if (level == SUB_LEVEL) {
 				convertView.setBackgroundColor(Color.parseColor("#EFEDEE"));
 				if (selectposition == position) {
-					convertView.setBackgroundColor(Color.parseColor("#E7E3E2"));
+					convertView.setBackgroundColor(Color.parseColor("#F8F8F8"));
 					cateTitle.setTextColor(Color.BLUE);
 				} else {
 					convertView.setBackgroundColor(Color.parseColor("#EFEDEE"));
 					cateTitle.setTextColor(Color.BLACK);
 				}
 			} else if (level == THIRD_LEVEL) {
-				convertView.setBackgroundColor(Color.parseColor("#E7E3E2"));
+				convertView.setBackgroundColor(Color.parseColor("#F8F8F8"));
 				if (selectposition == position) {
 					convertView.setBackgroundColor(Color.parseColor("#00edfc"));
 					cateTitle.setTextColor(Color.BLUE);
 				} else {
-					convertView.setBackgroundColor(Color.parseColor("#E7E3E2"));
+					convertView.setBackgroundColor(Color.parseColor("#F8F8F8"));
 					cateTitle.setTextColor(Color.BLACK);
 				}
 			} /*else {

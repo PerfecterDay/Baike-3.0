@@ -1,6 +1,8 @@
 package com.m2h.bean;
 
-public class ListItem {
+import java.io.Serializable;
+
+public class ListItem implements Serializable{
 	private int id;
 	private String name;
 	private int flag; // flag:0表示分类，1表示词条

@@ -163,6 +163,7 @@ public class CateActivity extends Activity {
 		title = bundle.getString("title");
 		// 初始化List数据源
 		topList = new ArrayList<ListItem>();
+		topList = (List<ListItem>) bundle.getSerializable("subCate");
 		subList = new ArrayList<ListItem>();
 		thirdList = new ArrayList<ListItem>();
 
@@ -176,15 +177,15 @@ public class CateActivity extends Activity {
 	}
 
 	private void initTopLv() {
-		CateThread topThread = new CateThread(oriCid);
-		topThread.start();
-		try {
-			topThread.join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		topList = topThread.getMyList();
-
+//		CateThread topThread = new CateThread(oriCid);
+//		topThread.start();
+//		try {
+//			topThread.join();
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
+//		topList = topThread.getMyList();
+//		
 		topAdapter = new CateListViewAdapter(this, topList, 0);
 		topcateLV.setAdapter(topAdapter);
 	}

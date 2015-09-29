@@ -16,7 +16,7 @@ import com.m2h.bean.ViewHolder;
 import com.m2h.utils.ImageLoader;
 
 public class MyGridAdapter extends BaseAdapter {
-
+	private String devbaseURL = "http://mhbb.mhedu.sh.cn:8080/hdwiki/";
 	private List<ListItem> mLists;
 	private LayoutInflater mInflater;
 	private ImageLoader mImageLoader;
@@ -60,11 +60,18 @@ public class MyGridAdapter extends BaseAdapter {
 			// 默认图片
 			viewHolder.mImageView.setImageResource(R.drawable.ic_launcher);
 			// 动态加载图片
-//			String image_url = mLists.get(position).getPicurl();
-//			viewHolder.mImageView.setTag(image_url);
-//			mImageLoader.showImageByAsyncTask(viewHolder.mImageView, image_url);
-
+			String image_url = mLists.get(position).getPicurl();
 			viewHolder.mTextView.setText(mLists.get(position).getName());
+//			viewHolder.mImageView.setImageResource(R.drawable.p002);
+		if (!image_url.equals("")) {
+				viewHolder.mImageView.setTag(devbaseURL+image_url);
+				mImageLoader.showImageByAsyncTask(viewHolder.mImageView, devbaseURL+image_url);
+			}else {
+				image_url="cate_uploads/default.png";
+				viewHolder.mImageView.setTag(devbaseURL+image_url);
+				mImageLoader.showImageByAsyncTask(viewHolder.mImageView, devbaseURL+image_url);
+			}
+			
 		}
 		return convertView;
 	}

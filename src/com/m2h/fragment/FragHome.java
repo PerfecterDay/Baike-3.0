@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -16,14 +17,17 @@ import org.json.JSONObject;
 
 import com.m2h.activity.CateActivity;
 import com.m2h.activity.R;
+import com.m2h.activity.ShowActivity;
 import com.m2h.adapter.MyGridAdapter;
 import com.m2h.bean.ListItem;
+import com.m2h.utils.CateThread;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,7 +79,7 @@ public class FragHome extends Fragment implements OnItemClickListener {
 		List<ListItem> newsBeanList = new ArrayList<ListItem>();
 		try {
 			String jsonString = readStream(new URL(url).openStream());
-			// Log.i("newsString", jsonString);
+			 Log.i("newsString", jsonString);
 			JSONObject jsonobject = new JSONObject(jsonString);
 
 			JSONArray jsonarray = jsonobject.getJSONArray("cate");
@@ -124,15 +128,40 @@ public class FragHome extends Fragment implements OnItemClickListener {
 
 		int cid = itemObject.getId();
 		String title = itemObject.getName();
-		Intent intent = new Intent(getActivity(), CateActivity.class);
+		
+		List<ListItem> cateList = new ArrayList<ListItem>();
+		CateThread subThread = new CateThread(cid);
+		subThread.start();
+		try {
+			subThread.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		cateList = subThread.getMyList();
+		if (cateList.size() == 0) {
+			//没有分类，跳转到浏览页面
+			Intent intent = new Intent(getActivity(),ShowActivity.class);
 
-		// 用Bundle携带数据
-		Bundle bundle = new Bundle();
-		bundle.putInt("cid", cid);
-		bundle.putString("title", title);
-		intent.putExtras(bundle);
+			// 用Bundle携带数据
+			Bundle bundle = new Bundle();
+			bundle.putInt("cid", cid);
+			bundle.putInt("flag", 0);
+			bundle.putString("title", title);
+			intent.putExtras(bundle);
 
-		startActivity(intent);
+			startActivity(intent);
+		} else {
+			// 跳转到分类页面，用Bundle携带数据
+			Intent intent = new Intent(getActivity(), CateActivity.class);
+			Bundle bundle = new Bundle();
+			bundle.putInt("cid", cid);
+			bundle.putString("title", title);
+			bundle.putSerializable("subCate", (Serializable) cateList);
+			intent.putExtras(bundle);
+
+			startActivity(intent);
+		}
+		
 	}
 	
 	public void refresh() {

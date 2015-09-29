@@ -7,6 +7,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import com.m2h.activity.R;
+
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
@@ -59,8 +61,9 @@ public class ImageLoader {
 			is = new BufferedInputStream(conn.getInputStream());
 			bitmap = BitmapFactory.decodeStream(is);
 			//转换为圆型图片
-			bitmap = toRoundBitmap(bitmap);
-
+			if(bitmap != null){
+				bitmap = toRoundBitmap(bitmap);
+			}
 			conn.disconnect();
 			return bitmap;
 		} catch (MalformedURLException e) {
@@ -69,7 +72,9 @@ public class ImageLoader {
 			e.printStackTrace();
 		} finally {
 			try {
-				is.close();
+				if (is != null) {
+					is.close();
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -149,8 +154,10 @@ public class ImageLoader {
 		@Override
 		protected void onPostExecute(Bitmap result) {
 			super.onPostExecute(result);
-			if (mImageView.getTag().equals(mUrl)) {
+			if (mImageView.getTag().equals(mUrl) && result != null) {
 				mImageView.setImageBitmap(result);
+			}else if(result == null){
+				mImageView.setImageResource(R.drawable.error);
 			}
 		}
 	}
