@@ -18,25 +18,27 @@ public class NetState extends BroadcastReceiver{
         	if(!gprs.isConnected() && !wifi.isConnected())
             {
             	Toast.makeText(context.getApplicationContext(),
-            			"网络连接断开，请检查网络", Toast.LENGTH_SHORT)
+            			"网络连接断开，请检查网络", Toast.LENGTH_LONG)
             			.show();
-
             }
             else{
-
+            	Toast.makeText(context.getApplicationContext(),
+            			"网络连接成功", Toast.LENGTH_LONG)
+            			.show();
+            	
             }
         }else if(wifi != null){
         	if(!wifi.isConnected())
             {
             	Toast.makeText(context.getApplicationContext(),
-            			"网络连接断开，请检查网络", Toast.LENGTH_SHORT)
+            			"网络连接断开，请检查网络", Toast.LENGTH_LONG)
             			.show();
 
             }
             else{
-//            	Toast.makeText(context.getApplicationContext(),
-//            			"网络连接成功", Toast.LENGTH_LONG)
-//            			.show();
+            	Toast.makeText(context.getApplicationContext(),
+            			"网络连接成功", Toast.LENGTH_LONG)
+            			.show();
             	
             }
         }
